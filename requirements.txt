@@ -1,0 +1,4 @@
+# Optional dependencies for enhanced graphing and visualization
+# The core compression, decompression, CLI, and Tkinter GUI run entirely on the Python Standard Library!
+matplotlib>=3.5.0
+numpy>=1.20.0
