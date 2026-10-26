@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🌐 Launch Web Studio (Browser)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🖥️ Launch Desktop GUI Window",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/gui.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "⚡ Run Interactive Terminal CLI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/cli.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🧪 Run All Compression Unit Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/test_compression.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

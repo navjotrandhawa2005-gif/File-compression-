@@ -177,8 +177,10 @@ class LZWCompressor(BaseCompressor):
                 new_entry = previous_phrase + bytes([phrase[0]])
                 dictionary.append(new_entry)
 
-                # Check if bit width should expand
-                if len(dictionary) == (1 << current_bits) and current_bits < MAX_BITS:
+                # Check if bit width should expand:
+                # Since decoder dictionary addition lags by 1 step relative to encoder,
+                # bit width expands when len(dictionary) + 1 >= (1 << current_bits).
+                if len(dictionary) + 1 >= (1 << current_bits) and current_bits < MAX_BITS:
                     current_bits += 1
 
             previous_phrase = phrase

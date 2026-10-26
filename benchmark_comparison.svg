@@ -1,0 +1,57 @@
+<svg width="900" height="500" xmlns="http://www.w3.org/2000/svg" style="background:#0F172A;font-family:sans-serif;">
+<text x="450" y="35" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="bold">DAA File Compression Algorithm Benchmark (Compression Ratio)</text>
+<rect x="200" y="55" width="14" height="14" fill="#2563EB" rx="3"/>
+<text x="220" y="67" fill="#E2E8F0" font-size="12">Huffman Coding</text>
+<rect x="380" y="55" width="14" height="14" fill="#10B981" rx="3"/>
+<text x="400" y="67" fill="#E2E8F0" font-size="12">Run-Length Encoding (RLE)</text>
+<rect x="560" y="55" width="14" height="14" fill="#F59E0B" rx="3"/>
+<text x="580" y="67" fill="#E2E8F0" font-size="12">LZW Compression</text>
+<line x1="100" y1="375.9259259259259" x2="820" y2="375.9259259259259" stroke="#64748B" stroke-dasharray="4" stroke-width="1.5"/>
+<text x="90" y="379.9259259259259" fill="#94A3B8" font-size="10" text-anchor="end">1.0x</text>
+<rect x="115.4" y="400.0" width="22.0" height="0.0" fill="#2563EB" rx="2"/>
+<rect x="139.4" y="400.0" width="22.0" height="0.0" fill="#10B981" rx="2"/>
+<rect x="163.4" y="400.0" width="22.0" height="0.0" fill="#F59E0B" rx="2"/>
+<text x="151.4" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Empty (0 Bytes)</text>
+<rect x="218.3" y="399.2" width="22.0" height="0.8" fill="#2563EB" rx="2"/>
+<text x="230.3" y="395.2" fill="#F8FAFC" font-size="9" text-anchor="middle">0.03x</text>
+<rect x="242.3" y="399.1" width="22.0" height="0.9" fill="#10B981" rx="2"/>
+<text x="254.3" y="395.1" fill="#F8FAFC" font-size="9" text-anchor="middle">0.04x</text>
+<rect x="266.3" y="399.1" width="22.0" height="0.9" fill="#F59E0B" rx="2"/>
+<text x="278.3" y="395.1" fill="#F8FAFC" font-size="9" text-anchor="middle">0.04x</text>
+<text x="254.3" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Single Char (1 B)</text>
+<rect x="321.1" y="362.7" width="22.0" height="37.3" fill="#2563EB" rx="2"/>
+<text x="333.1" y="358.7" fill="#F8FAFC" font-size="9" text-anchor="middle">1.55x</text>
+<rect x="345.1" y="361.6" width="22.0" height="38.4" fill="#10B981" rx="2"/>
+<text x="357.1" y="357.6" fill="#F8FAFC" font-size="9" text-anchor="middle">1.60x</text>
+<rect x="369.1" y="316.4" width="22.0" height="83.6" fill="#F59E0B" rx="2"/>
+<text x="381.1" y="312.4" fill="#F8FAFC" font-size="9" text-anchor="middle">3.47x</text>
+<text x="357.1" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Repetitive Data</text>
+<rect x="424.0" y="252.8" width="22.0" height="147.2" fill="#2563EB" rx="2"/>
+<text x="436.0" y="248.8" fill="#F8FAFC" font-size="9" text-anchor="middle">6.11x</text>
+<rect x="448.0" y="100.0" width="22.0" height="300.0" fill="#10B981" rx="2"/>
+<text x="460.0" y="96.0" fill="#F8FAFC" font-size="9" text-anchor="middle">12.46x</text>
+<rect x="472.0" y="134.7" width="22.0" height="265.3" fill="#F59E0B" rx="2"/>
+<text x="484.0" y="130.7" fill="#F8FAFC" font-size="9" text-anchor="middle">11.02x</text>
+<text x="460.0" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Monolithic (10 KB)</text>
+<rect x="526.9" y="364.2" width="22.0" height="35.8" fill="#2563EB" rx="2"/>
+<text x="538.9" y="360.2" fill="#F8FAFC" font-size="9" text-anchor="middle">1.49x</text>
+<rect x="550.9" y="376.6" width="22.0" height="23.4" fill="#10B981" rx="2"/>
+<text x="562.9" y="372.6" fill="#F8FAFC" font-size="9" text-anchor="middle">0.97x</text>
+<rect x="574.9" y="360.2" width="22.0" height="39.8" fill="#F59E0B" rx="2"/>
+<text x="586.9" y="356.2" fill="#F8FAFC" font-size="9" text-anchor="middle">1.65x</text>
+<text x="562.9" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Natural Prose</text>
+<rect x="629.7" y="372.0" width="22.0" height="28.0" fill="#2563EB" rx="2"/>
+<text x="641.7" y="368.0" fill="#F8FAFC" font-size="9" text-anchor="middle">1.16x</text>
+<rect x="653.7" y="375.4" width="22.0" height="24.6" fill="#10B981" rx="2"/>
+<text x="665.7" y="371.4" fill="#F8FAFC" font-size="9" text-anchor="middle">1.02x</text>
+<rect x="677.7" y="364.0" width="22.0" height="36.0" fill="#F59E0B" rx="2"/>
+<text x="689.7" y="360.0" fill="#F8FAFC" font-size="9" text-anchor="middle">1.50x</text>
+<text x="665.7" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Source Code</text>
+<rect x="732.6" y="378.7" width="22.0" height="21.3" fill="#2563EB" rx="2"/>
+<text x="744.6" y="374.7" fill="#F8FAFC" font-size="9" text-anchor="middle">0.89x</text>
+<rect x="756.6" y="376.2" width="22.0" height="23.8" fill="#10B981" rx="2"/>
+<text x="768.6" y="372.2" fill="#F8FAFC" font-size="9" text-anchor="middle">0.99x</text>
+<rect x="780.6" y="383.6" width="22.0" height="16.4" fill="#F59E0B" rx="2"/>
+<text x="792.6" y="379.6" fill="#F8FAFC" font-size="9" text-anchor="middle">0.68x</text>
+<text x="768.6" y="425" fill="#CBD5E1" font-size="11" text-anchor="middle">Random Binary</text>
+</svg>

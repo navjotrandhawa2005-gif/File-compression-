@@ -79,20 +79,26 @@ class ContainerFile:
         return header_bytes + metadata + compressed_payload
 
     @staticmethod
-    def unpack(data: bytes) -> Tuple[ContainerHeader, bytes, bytes]:
+    def read_header(data_or_path) -> ContainerHeader:
         """
-        Unpacks a binary container into (header, metadata, compressed_payload).
-        
-        Raises:
-            ValueError: If magic bytes mismatch or data is corrupt/truncated.
+        Safely extracts the fixed 50-byte header from file path or bytes
+        without requiring full archive metadata or payload in memory.
         """
-        if len(data) < HEADER_FIXED_SIZE:
+        if isinstance(data_or_path, str):
+            with open(data_or_path, "rb") as f:
+                raw = f.read(HEADER_FIXED_SIZE)
+        elif isinstance(data_or_path, (bytes, bytearray)):
+            raw = data_or_path[:HEADER_FIXED_SIZE]
+        else:
+            raw = data_or_path.read(HEADER_FIXED_SIZE)
+
+        if len(raw) < HEADER_FIXED_SIZE:
             raise ValueError(
-                f"File too small to be a valid DAAC archive ({len(data)} bytes, expected at least {HEADER_FIXED_SIZE})"
+                f"File too small to be a valid DAAC archive ({len(raw)} bytes, expected at least {HEADER_FIXED_SIZE})"
             )
 
         magic, version, algo_id, orig_size, sha256_hash, meta_len = struct.unpack(
-            HEADER_FIXED_FORMAT, data[:HEADER_FIXED_SIZE]
+            HEADER_FIXED_FORMAT, raw
         )
 
         if magic != MAGIC_HEADER:
@@ -106,16 +112,7 @@ class ContainerFile:
         if algo_id not in ALGO_NAMES:
             raise ValueError(f"Unknown algorithm ID: {algo_id}")
 
-        meta_start = HEADER_FIXED_SIZE
-        meta_end = meta_start + meta_len
-
-        if len(data) < meta_end:
-            raise ValueError("Corrupt file: Archive truncated inside metadata section")
-
-        metadata = data[meta_start:meta_end]
-        compressed_payload = data[meta_end:]
-
-        header = ContainerHeader(
+        return ContainerHeader(
             version=version,
             algorithm_id=algo_id,
             original_size=orig_size,
@@ -123,7 +120,27 @@ class ContainerFile:
             meta_length=meta_len,
         )
 
+    @staticmethod
+    def unpack(data: bytes) -> Tuple[ContainerHeader, bytes, bytes]:
+        """
+        Unpacks a binary container into (header, metadata, compressed_payload).
+        
+        Raises:
+            ValueError: If magic bytes mismatch or data is corrupt/truncated.
+        """
+        header = ContainerFile.read_header(data)
+
+        meta_start = HEADER_FIXED_SIZE
+        meta_end = meta_start + header.meta_length
+
+        if len(data) < meta_end:
+            raise ValueError("Corrupt file: Archive truncated inside metadata section")
+
+        metadata = data[meta_start:meta_end]
+        compressed_payload = data[meta_end:]
+
         return header, metadata, compressed_payload
+
 
 
 def compute_sha256(data: bytes) -> bytes:

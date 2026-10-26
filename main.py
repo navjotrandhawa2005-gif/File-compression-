@@ -18,7 +18,11 @@ def main():
     # If explicit CLI flags or subcommands were provided
     if len(sys.argv) > 1:
         arg1 = sys.argv[1].lower()
-        if arg1 in ("--gui", "-g"):
+        if arg1 in ("--web", "-w"):
+            from server import launch_web_server
+            launch_web_server()
+            return
+        elif arg1 in ("--gui", "-g"):
             from gui import launch_gui
             launch_gui()
             return

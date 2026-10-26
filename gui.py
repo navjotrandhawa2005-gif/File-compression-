@@ -142,12 +142,13 @@ class CompressionAppGUI:
             return
 
         algo_choice = self.algo_var.get()
-        default_out = input_path + ".daac"
+        base_name = os.path.basename(input_path)
+        comp_name = base_name if base_name.startswith("compressed_") else f"compressed_{base_name}"
+        default_out = os.path.join(os.path.dirname(input_path), comp_name)
         output_path = filedialog.asksaveasfilename(
-            title="Save Compressed Archive As",
-            initialfile=os.path.basename(default_out),
-            defaultextension=".daac",
-            filetypes=[("DAA Compressed Archive", "*.daac"), ("All Files", "*.*")]
+            title="Save Compressed File As",
+            initialfile=comp_name,
+            filetypes=[("Compressed File", "*.*"), ("All Files", "*.*")]
         )
         if not output_path:
             return
@@ -243,19 +244,16 @@ class CompressionAppGUI:
 
     def _browse_decomp_file(self):
         f = filedialog.askopenfilename(
-            title="Select compressed archive",
-            filetypes=[("DAA Compressed Archive", "*.daac"), ("All Files", "*.*")]
+            title="Select compressed file",
+            filetypes=[("Compressed File", "*.*"), ("DAA Archive", "*.daac"), ("All Files", "*.*")]
         )
         if f:
             self.decomp_input_var.set(f)
-            # Inspect header
             try:
-                with open(f, "rb") as fh:
-                    sample = fh.read(64)
-                header, _, _ = ContainerFile.unpack(sample + b"\x00" * 64)
+                header = ContainerFile.read_header(f)
                 algo = get_compressor_by_id(header.algorithm_id)
                 self.header_info_var.set(
-                    f"Archive Info: Algorithm = {algo.name} | Original Size = {header.original_size:,} bytes | SHA-256 = {header.sha256_hash.hex()[:16]}..."
+                    f"File Info: Algorithm = {algo.name} | Original Size = {header.original_size:,} bytes | SHA-256 = {header.sha256_hash.hex()[:16]}..."
                 )
             except Exception as e:
                 self.header_info_var.set(f"Could not parse header: {e}")
@@ -268,15 +266,20 @@ class CompressionAppGUI:
     def _start_decompression_thread(self):
         archive_path = self.decomp_input_var.get().strip()
         if not archive_path or not os.path.isfile(archive_path):
-            messagebox.showwarning("Archive Missing", "Please select a valid archive file.")
+            messagebox.showwarning("File Missing", "Please select a valid compressed file.")
             return
 
         # Choose destination
-        base = os.path.splitext(archive_path)[0]
-        default_out = base + ".restored"
+        base = os.path.basename(archive_path)
+        if base.startswith("compressed_"):
+            restored_name = base[len("compressed_"):]
+        elif base.endswith(".daac"):
+            restored_name = base[:-5]
+        else:
+            restored_name = f"restored_{base}"
         output_path = filedialog.asksaveasfilename(
             title="Save Restored File As",
-            initialfile=os.path.basename(default_out)
+            initialfile=restored_name
         )
         if not output_path:
             return
@@ -290,9 +293,7 @@ class CompressionAppGUI:
 
         def worker():
             try:
-                with open(archive_path, "rb") as fh:
-                    sample = fh.read(64)
-                header, _, _ = ContainerFile.unpack(sample + b"\x00" * 64)
+                header = ContainerFile.read_header(archive_path)
                 compressor = get_compressor_by_id(header.algorithm_id)
                 stats = compressor.decompress_file(archive_path, output_path, original_for_verify=verify_file)
 

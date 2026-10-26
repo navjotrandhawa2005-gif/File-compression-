@@ -95,7 +95,9 @@ def interactive_compress():
     else:
         algo = algo_map[choice]
 
-    default_output = file_path + ".daac"
+    base_name = os.path.basename(file_path)
+    comp_name = base_name if base_name.startswith("compressed_") else f"compressed_{base_name}"
+    default_output = os.path.join(os.path.dirname(file_path), comp_name)
     out_input = input(f"Enter output compressed file path [Default: {default_output}]: ").strip().strip("\"'")
     output_path = out_input if out_input else default_output
 
@@ -117,17 +119,21 @@ def interactive_decompress():
 
     # Inspect archive header automatically to detect algorithm
     try:
-        with open(archive_path, "rb") as f:
-            header_sample = f.read(64)
-        header, _, _ = ContainerFile.unpack(header_sample + b"\x00" * 64)
+        header = ContainerFile.read_header(archive_path)
         algo = get_compressor_by_id(header.algorithm_id)
         print(f"Detected archive format: Encoded with {algo.name} (Original size: {header.original_size:,} bytes)")
     except Exception as ex:
         print(f"Error inspecting archive header: {ex}")
         return
 
-    base_name = os.path.splitext(archive_path)[0]
-    default_output = base_name + ".restored"
+    base_name = os.path.basename(archive_path)
+    if base_name.startswith("compressed_"):
+        restored_name = base_name[len("compressed_"):]
+    elif base_name.endswith(".daac"):
+        restored_name = base_name[:-5]
+    else:
+        restored_name = f"restored_{base_name}"
+    default_output = os.path.join(os.path.dirname(archive_path), restored_name)
     out_input = input(f"Enter restored file path [Default: {default_output}]: ").strip().strip("\"'")
     output_path = out_input if out_input else default_output
 
@@ -157,8 +163,9 @@ def interactive_menu():
         print("  2. Decompress a file (.daac archive)")
         print("  3. Run comprehensive benchmark & generate comparison graphs")
         print("  4. Verify two files are identical (lossless checker)")
-        print("  5. Exit")
-        choice = input("\nSelect an option (1-5): ").strip()
+        print("  5. Launch Modern Web Browser Studio (Recommended)")
+        print("  6. Exit")
+        choice = input("\nSelect an option (1-6): ").strip()
 
         if choice == "1":
             interactive_compress()
@@ -174,10 +181,14 @@ def interactive_menu():
             print(f"\nResult: {'PASS (100% Identical)' if identical else 'FAIL'}")
             print(f"Details: {msg}")
         elif choice == "5":
+            print("\nStarting local Web Studio server...")
+            from server import launch_web_server
+            launch_web_server()
+        elif choice == "6":
             print("Exiting. Thank you!")
             break
         else:
-            print("Invalid option, please enter 1, 2, 3, 4, or 5.")
+            print("Invalid option, please enter 1, 2, 3, 4, 5, or 6.")
 
         input("\nPress Enter to return to main menu...")
 
@@ -211,15 +222,16 @@ def run_cli_arguments():
 
     if args.command == "compress":
         compressor = get_compressor_by_name(args.algorithm)
-        output_path = args.output or (args.input + ".daac")
+        base_name = os.path.basename(args.input)
+        comp_name = base_name if base_name.startswith("compressed_") else f"compressed_{base_name}"
+        default_out = os.path.join(os.path.dirname(args.input), comp_name)
+        output_path = args.output or default_out
         print(f"Compressing '{args.input}' using {compressor.name}...")
         stats = compressor.compress_file(args.input, output_path)
         display_compression_stats(stats, args.input, output_path)
 
     elif args.command == "decompress":
-        with open(args.input, "rb") as f:
-            sample_data = f.read(64)
-        header, _, _ = ContainerFile.unpack(sample_data + b"\x00" * 64)
+        header = ContainerFile.read_header(args.input)
         compressor = get_compressor_by_id(header.algorithm_id)
         print(f"Decompressing '{args.input}' using {compressor.name}...")
         stats = compressor.decompress_file(args.input, args.output, original_for_verify=args.verify)
