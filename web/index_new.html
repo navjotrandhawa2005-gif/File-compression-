@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAAC Studio | Lossless Compression Laboratory</title>
+  <meta name="description" content="Professional lossless file compression laboratory with Huffman, PackBits RLE, and LZW algorithms.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style_new.css">
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Hallmark Stamp -->
+  <!-- HALLMARK: style=technical v2.0.0 | critique: precision over decoration | waived: none -->
+  
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-mark">
+            <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">DAAC Studio</span>
+            <span class="brand-tag">Lossless Compression Lab</span>
+          </div>
+        </div>
+        
+        <nav class="nav">
+          <button class="nav-item active" data-tab="compress">
+            <i data-lucide="archive" style="width: 16px; height: 16px;"></i>
+            <span>Compress</span>
+          </button>
+          <button class="nav-item" data-tab="decompress">
+            <i data-lucide="package-open" style="width: 16px; height: 16px;"></i>
+            <span>Decompress</span>
+          </button>
+          <button class="nav-item" data-tab="visualizer">
+            <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
+            <span>Visualizer</span>
+          </button>
+          <button class="nav-item" data-tab="benchmark">
+            <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+            <span>Benchmark</span>
+          </button>
+          <button class="nav-item" data-tab="inspector">
+            <i data-lucide="file-search" style="width: 16px; height: 16px;"></i>
+            <span>Inspector</span>
+          </button>
+        </nav>
+        
+        <button class="cmd-btn" id="cmdPaletteBtn">
+          <i data-lucide="command" style="width: 14px; height: 14px;"></i>
+          <span>Command</span>
+          <kbd>⌘K</kbd>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Compress Tab -->
+      <section class="tab-pane active" id="tab-compress">
+        <div class="page-header">
+          <h1 class="page-title">Compression</h1>
+          <p class="page-subtitle">Encode files using Huffman, PackBits RLE, or LZW with cryptographic verification</p>
+        </div>
+        
+        <div class="grid-layout">
+          <!-- Input Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Source</h2>
+              <span class="panel-badge">Input</span>
+            </div>
+            
+            <div class="dropzone" id="compressDropzone">
+              <div class="dropzone-content">
+                <i data-lucide="upload-cloud" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+                <p class="dropzone-text">Drop files here or click to browse</p>
+                <p class="dropzone-hint">Supports any binary file up to 50 MB</p>
+                <input type="file" id="compressFileInput" hidden>
+              </div>
+            </div>
+            
+            <div class="file-info" id="compressFileInfo" style="display: none;">
+              <div class="file-row">
+                <span class="file-name" id="compressFileName"></span>
+                <span class="file-size" id="compressFileSize"></span>
+              </div>
+            </div>
+            
+            <div class="section">
+              <h3 class="section-title">Algorithm</h3>
+              <div class="segmented">
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="huffman" checked>
+                  <span class="segmented-label">Huffman</span>
+                  <span class="segmented-desc">Entropy coding</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="rle">
+                  <span class="segmented-label">RLE</span>
+                  <span class="segmented-desc">PackBits</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="lzw">
+                  <span class="segmented-label">LZW</span>
+                  <span class="segmented-desc">Dictionary</span>
+                </label>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary btn-full" id="compressBtn">
+              <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+              <span>Compress</span>
+            </button>
+          </div>
+          
+          <!-- Results Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Results</h2>
+              <span class="panel-badge">Output</span>
+            </div>
+            
+            <div class="empty-state" id="compressEmpty">
+              <i data-lucide="file-archive" style="width: 48px; height: 48px;" class="empty-icon"></i>
+              <p class="empty-text">No compression yet</p>
+              <p class="empty-hint">Select a file and algorithm to begin</p>
+            </div>
+            
+            <div id="compressResults" style="display: none;">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <span class="stat-label">Original</span>
+                  <span class="stat-value" id="statOriginal">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Compressed</span>
+                  <span class="stat-value" id="statCompressed">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Ratio</span>
+                  <span class="stat-value stat-accent" id="statRatio">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Savings</span>
+                  <span class="stat-value stat-success" id="statSavings">-</span>
+                </div>
+              </div>
+              
+              <button class="btn btn-secondary btn-full" id="downloadCompressed">
+                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                <span>Download .daac</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Decompress Tab -->
+      <section class="tab-pane" id="tab-decompress">
+        <div class="page-header">
+          <h1 class="page-title">Decompression</h1>
+          <p class="page-subtitle">Restore original files from .daac containers with integrity verification</p>
+        </div>
+        
+        <div class="grid-layout">
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Archive</h2>
+              <span class="panel-badge">.daac</span>
+            </div>
+            
+            <div class="dropzone" id="decompressDropzone">
+              <div class="dropzone-content">
+                <i data-lucide="file-down" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+                <p class="dropzone-text">Drop .daac file here</p>
+                <p class="dropzone-hint">Algorithm auto-detected from header</p>
+                <input type="file" id="decompressFileInput" accept=".daac" hidden>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary btn-full" id="decompressBtn" disabled>
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              <span>Decompress</span>
+            </button>
+          </div>
+          
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Verification</h2>
+              <span class="panel-badge">SHA-256</span>
+            </div>
+            
+            <div class="empty-state" id="decompressEmpty">
+              <i data-lucide="shield-check" style="width: 48px; height: 48px;" class="empty-icon"></i>
+              <p class="empty-text">Awaiting archive</p>
+            </div>
+            
+            <div id="decompressResults" style="display: none;">
+              <div class="verify-badge" id="verifyBadge">
+                <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                <span id="verifyText">Verification</span>
+              </div>
+              
+              <button class="btn btn-secondary btn-full" id="downloadRestored">
+                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                <span>Download Restored</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Visualizer Tab -->
+      <section class="tab-pane" id="tab-visualizer">
+        <div class="page-header">
+          <h1 class="page-title">Algorithm Visualizer</h1>
+          <p class="page-subtitle">Step-by-step animation of compression algorithms</p>
+        </div>
+        
+        <div class="panel">
+          <div class="panel-header">
+            <div class="tabs-inline">
+              <button class="tab-inline active" data-viz="huffman">Huffman</button>
+              <button class="tab-inline" data-viz="rle">RLE</button>
+              <button class="tab-inline" data-viz="lzw">LZW</button>
+            </div>
+            <input type="text" class="input" id="vizInput" value="banana" placeholder="Enter text...">
+          </div>
+          
+          <div class="viz-container" id="vizHuffman">
+            <div class="viz-controls">
+              <button class="btn btn-sm" id="vizPlay"><i data-lucide="play" style="width: 14px; height: 14px;"></i> Play</button>
+              <button class="btn btn-sm" id="vizPause"><i data-lucide="pause" style="width: 14px; height: 14px;"></i> Pause</button>
+              <button class="btn btn-sm" id="vizStep"><i data-lucide="skip-forward" style="width: 14px; height: 14px;"></i> Step</button>
+              <button class="btn btn-sm" id="vizReset"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset</button>
+            </div>
+            <svg id="huffmanTree" class="viz-canvas"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Benchmark Tab -->
+      <section class="tab-pane" id="tab-benchmark">
+        <div class="page-header">
+          <h1 class="page-title">Benchmark</h1>
+          <p class="page-subtitle">Performance analysis across algorithm and file type combinations</p>
+        </div>
+        
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Results</h2>
+            <button class="btn btn-sm" id="runBenchmark">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              Run Benchmark
+            </button>
+          </div>
+          <canvas id="benchmarkChart"></canvas>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>File Type</th>
+                  <th>Algorithm</th>
+                  <th>Original</th>
+                  <th>Compressed</th>
+                  <th>Ratio</th>
+                  <th>Savings</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inspector Tab -->
+      <section class="tab-pane" id="tab-inspector">
+        <div class="page-header">
+          <h1 class="page-title">Container Inspector</h1>
+          <p class="page-subtitle">Examine .daac file structure byte by byte</p>
+        </div>
+        
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Header Analysis</h2>
+          </div>
+          <div class="dropzone" id="inspectorDropzone">
+            <div class="dropzone-content">
+              <i data-lucide="search" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+              <p class="dropzone-text">Drop .daac file to inspect</p>
+              <input type="file" id="inspectorFileInput" accept=".daac" hidden>
+            </div>
+          </div>
+          <div id="inspectorResults" style="display: none; margin-top: 24px;">
+            <div class="inspector-grid">
+              <div class="inspector-item">
+                <span class="inspector-label">Magic</span>
+                <span class="inspector-value mono" id="inspMagic"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Version</span>
+                <span class="inspector-value" id="inspVersion"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Algorithm</span>
+                <span class="inspector-value" id="inspAlgo"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Original Size</span>
+                <span class="inspector-value" id="inspOriginal"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">SHA-256</span>
+                <span class="inspector-value mono small" id="inspSha"></span>
+              </div>
+            </div>
+            <div class="byte-map">
+              <h3 class="section-title">Header Byte Map (50 bytes)</h3>
+              <div class="byte-grid" id="byteGrid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="cmd-palette" id="cmdPalette">
+    <div class="cmd-backdrop" id="cmdBackdrop"></div>
+    <div class="cmd-modal">
+      <div class="cmd-input-wrap">
+        <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command...">
+      </div>
+      <div class="cmd-list" id="cmdList">
+        <div class="cmd-item" data-cmd="compress">
+          <i data-lucide="archive" style="width: 16px; height: 16px;"></i>
+          <span>Go to Compress</span>
+        </div>
+        <div class="cmd-item" data-cmd="decompress">
+          <i data-lucide="package-open" style="width: 16px; height: 16px;"></i>
+          <span>Go to Decompress</span>
+        </div>
+        <div class="cmd-item" data-cmd="visualizer">
+          <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
+          <span>Go to Visualizer</span>
+        </div>
+        <div class="cmd-item" data-cmd="benchmark">
+          <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+          <span>Go to Benchmark</span>
+        </div>
+        <div class="cmd-item" data-cmd="inspector">
+          <i data-lucide="file-search" style="width: 16px; height: 16px;"></i>
+          <span>Go to Inspector</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app_new.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

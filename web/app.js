@@ -186,6 +186,15 @@ async function computeSHA256(uint8Array) {
   return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function computeShannonEntropy(bytes) {
   if (!bytes || bytes.length === 0) return 0;
   const freq = new Uint32Array(256);
@@ -845,6 +854,8 @@ function compressImageDirectly(imageBytes, mimeType, qualityFactor = 0.75, origF
 
       // Scale and dimensions:
       // High Fidelity and Balanced preserve 100% exact original pixel dimensions (scale = 1.0)
+      const baseW = img.naturalWidth || img.width;
+      const baseH = img.naturalHeight || img.height;
       let scale = 1.0;
       if (qualityFactor <= 0.5) {
         scale = 0.75; // Max Compression: slight downscale for maximum disk space savings
