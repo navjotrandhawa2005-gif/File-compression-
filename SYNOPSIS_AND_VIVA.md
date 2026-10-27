@@ -40,7 +40,7 @@ Design and implement a unified, platform-independent tool that:
 | 1 | Implement Huffman coding using a greedy min-heap strategy | Done |
 | 2 | Implement PackBits-standard Run-Length Encoding | Done |
 | 3 | Implement variable-width (9–16 bit) LZW with dictionary reset | Done |
-| 4 | Design a self-contained binary container format (`.daac`) | Done |
+| 4 | Design a self-contained binary container format | Done |
 | 5 | Add SHA-256 integrity verification for lossless proof | Done |
 | 6 | Handle all critical edge cases (empty file, single symbol, bit padding, KwKwK, dictionary saturation) | Done |
 | 7 | Build GUI (Tkinter), interactive CLI, and argparse CLI | Done |
@@ -268,7 +268,7 @@ Keywords, indentation (`    self.`), and repeated syntactic fragments get dictio
 
 ---
 
-## B5. The `.daac` Container Format (Self-Contained Archive)
+## B5. The Self-Contained Binary Container Format
 
 Defined in `utils/file_io.py:40` with `struct` format `">4sBBQ32sI"` (big-endian):
 
@@ -512,12 +512,12 @@ python main.py
 python main.py --cli
 
 # Scripted compression with each algorithm
-python main.py compress -a huffman -i samples/natural_text.txt -o text.huff.daac
-python main.py compress -a rle     -i samples/monolithic_same.txt -o mono.rle.daac
-python main.py compress -a lzw     -i samples/source_code.py -o code.lzw.daac
+python main.py compress -a huffman -i samples/natural_text.txt -o compressed_natural_text.txt
+python main.py compress -a rle     -i samples/monolithic_same.txt -o compressed_monolithic_same.txt
+python main.py compress -a lzw     -i samples/source_code.py -o compressed_source_code.py
 
 # Decompress with automatic algorithm detection + verification against original
-python main.py decompress -i text.huff.daac -o restored.txt -v samples/natural_text.txt
+python main.py decompress -i compressed_natural_text.txt -o restored.txt -v samples/natural_text.txt
 
 # Full benchmark suite + graphs
 python main.py benchmark -o benchmark_results.png
@@ -526,7 +526,7 @@ python main.py benchmark -o benchmark_results.png
 python -m unittest test_compression.py -v
 
 # Inspect a container header manually (hexdump first 50 bytes)
-xxd -l 50 samples/natural_text.txt.daac
+xxd -l 50 compressed_natural_text.txt
 ```
 
 Expected test output: `Ran 16 tests ... OK`.
@@ -548,7 +548,7 @@ Expected test output: `Ran 16 tests ... OK`.
 
 ## C9. One-Minute Elevator Explanation (memorize)
 
-> "This project is a lossless file compression tool built purely on the Python standard library. It implements three algorithms, each representing a different DAA paradigm: **Huffman coding**, a greedy algorithm using a min-heap that is provably optimal for prefix-free codes and exploits skewed character frequencies; **PackBits Run-Length Encoding**, a linear-time scheme that collapses byte runs while bounding worst-case expansion to under 1%; and **LZW**, an adaptive dictionary method that maps repeated multi-byte phrases to short codes without ever transmitting its dictionary, including proper handling of the classic KwKwK decoder edge case and 9-to-16-bit variable-width codes with dictionary reset. All archives use a self-contained 50-byte-header `.daac` container embedding the algorithm ID, original size, algorithm metadata, and a SHA-256 digest that cryptographically proves bit-for-bit lossless reconstruction. The tool ships with a Tkinter GUI, an interactive and a scriptable CLI, an automated benchmark suite with visualizations, and a unittest suite covering every edge case from empty files to dictionary saturation. Our benchmarks confirm information theory: RLE wins on runs (48×), LZW wins on structured text and code, Huffman wins on natural prose, and all three expand on high-entropy random data — exactly as the pigeonhole principle predicts."
+> "This project is a lossless file compression tool built purely on the Python standard library. It implements three algorithms, each representing a different DAA paradigm: **Huffman coding**, a greedy algorithm using a min-heap that is provably optimal for prefix-free codes and exploits skewed character frequencies; **PackBits Run-Length Encoding**, a linear-time scheme that collapses byte runs while bounding worst-case expansion to under 1%; and **LZW**, an adaptive dictionary method that maps repeated multi-byte phrases to short codes without ever transmitting its dictionary, including proper handling of the classic KwKwK decoder edge case and 9-to-16-bit variable-width codes with dictionary reset. All archives use a self-contained 50-byte-header binary container embedding the algorithm ID, original size, algorithm metadata, and a SHA-256 digest that cryptographically proves bit-for-bit lossless reconstruction. The tool ships with a Tkinter GUI, an interactive and a scriptable CLI, an automated benchmark suite with visualizations, and a unittest suite covering every edge case from empty files to dictionary saturation. Our benchmarks confirm information theory: RLE wins on runs (48×), LZW wins on structured text and code, Huffman wins on natural prose, and all three expand on high-entropy random data — exactly as the pigeonhole principle predicts."
 
 ---
 
@@ -558,7 +558,7 @@ Expected test output: `Ran 16 tests ... OK`.
 - [ ] Can sketch the Huffman optimality proof (exchange argument + optimal substructure) on paper
 - [ ] Can hand-simulate Huffman on `"banana"` and RLE PackBits on `"AAAAABBBCC"`
 - [ ] Can hand-simulate LZW on `"ABABABA"` and explain the KwKwK resolution
-- [ ] Knows the `.daac` header layout (50 bytes) field by field
+- [ ] Knows the binary container header layout (50 bytes) field by field
 - [ ] Knows all three complexity triples and why Huffman is O(N) in practice
 - [ ] Knows the Shannon entropy argument and why random data expands
 - [ ] Knows every edge case in B8 and where it is handled in code

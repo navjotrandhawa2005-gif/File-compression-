@@ -96,22 +96,32 @@
             </div>
             
             <div class="section">
-              <h3 class="section-title">Algorithm</h3>
-              <div class="segmented">
-                <label class="segmented-item">
-                  <input type="radio" name="algo" value="huffman" checked>
-                  <span class="segmented-label">Huffman</span>
-                  <span class="segmented-desc">Entropy coding</span>
+              <h3 class="section-title">Compression Algorithm</h3>
+              <div class="segmented" id="algoSegmented">
+                <label class="segmented-item" id="algoItemAuto">
+                  <input type="radio" name="algo" value="auto" checked>
+                  <span class="segmented-label">Auto (Best)</span>
+                  <span class="segmented-desc">Smallest Size</span>
+                </label>
+                <label class="segmented-item" id="algoItemImage" style="display: none;">
+                  <input type="radio" name="algo" value="image_opt">
+                  <span class="segmented-label">Image Opt</span>
+                  <span class="segmented-desc">40–80% Smaller</span>
                 </label>
                 <label class="segmented-item">
-                  <input type="radio" name="algo" value="rle">
-                  <span class="segmented-label">RLE</span>
-                  <span class="segmented-desc">PackBits</span>
+                  <input type="radio" name="algo" value="huffman">
+                  <span class="segmented-label">Huffman</span>
+                  <span class="segmented-desc">Min-Heap</span>
                 </label>
                 <label class="segmented-item">
                   <input type="radio" name="algo" value="lzw">
                   <span class="segmented-label">LZW</span>
                   <span class="segmented-desc">Dictionary</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="rle">
+                  <span class="segmented-label">PackBits RLE</span>
+                  <span class="segmented-desc">Run-Length</span>
                 </label>
               </div>
             </div>
@@ -136,6 +146,15 @@
             </div>
             
             <div id="compressResults" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary);">
+                <span id="statAlgoUsed">Algorithm: Auto</span>
+                <span id="statLosslessPill" style="padding: 2px 8px; border-radius: 4px; background: var(--success-subtle); color: var(--success); font-size: 11px; font-weight: 600;">Smaller Size Guaranteed</span>
+              </div>
+              
+              <div id="imagePreviewWrap" style="display: none; margin-bottom: 16px; text-align: center;">
+                <img id="imagePreview" alt="Compressed Preview" style="max-height: 180px; max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border);" />
+              </div>
+              
               <div class="stats-grid">
                 <div class="stat-card">
                   <span class="stat-label">Original</span>
@@ -157,7 +176,7 @@
               
               <button class="btn btn-secondary btn-full" id="downloadCompressed">
                 <i data-lucide="download" style="width: 16px; height: 16px;"></i>
-                <span>Download .daac</span>
+                <span id="downloadBtnText">Download Compressed File</span>
               </button>
             </div>
           </div>
@@ -168,22 +187,22 @@
       <section class="tab-pane" id="tab-decompress">
         <div class="page-header">
           <h1 class="page-title">Decompression</h1>
-          <p class="page-subtitle">Restore original files from .daac containers with integrity verification</p>
+          <p class="page-subtitle">Restore original files with cryptographic integrity verification</p>
         </div>
         
         <div class="grid-layout">
           <div class="panel">
             <div class="panel-header">
-              <h2 class="panel-title">Archive</h2>
-              <span class="panel-badge">.daac</span>
+              <h2 class="panel-title">Compressed File</h2>
+              <span class="panel-badge">Lossless</span>
             </div>
             
             <div class="dropzone" id="decompressDropzone">
               <div class="dropzone-content">
                 <i data-lucide="file-down" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
-                <p class="dropzone-text">Drop .daac file here</p>
+                <p class="dropzone-text">Drop compressed file here</p>
                 <p class="dropzone-hint">Algorithm auto-detected from header</p>
-                <input type="file" id="decompressFileInput" accept=".daac" hidden>
+                <input type="file" id="decompressFileInput" hidden>
               </div>
             </div>
             
@@ -288,7 +307,7 @@
       <section class="tab-pane" id="tab-inspector">
         <div class="page-header">
           <h1 class="page-title">Container Inspector</h1>
-          <p class="page-subtitle">Examine .daac file structure byte by byte</p>
+          <p class="page-subtitle">Examine file structure byte by byte</p>
         </div>
         
         <div class="panel">
@@ -298,8 +317,8 @@
           <div class="dropzone" id="inspectorDropzone">
             <div class="dropzone-content">
               <i data-lucide="search" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
-              <p class="dropzone-text">Drop .daac file to inspect</p>
-              <input type="file" id="inspectorFileInput" accept=".daac" hidden>
+              <p class="dropzone-text">Drop compressed file to inspect</p>
+              <input type="file" id="inspectorFileInput" hidden>
             </div>
           </div>
           <div id="inspectorResults" style="display: none; margin-top: 24px;">

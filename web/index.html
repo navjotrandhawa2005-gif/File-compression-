@@ -1,803 +1,393 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CompressDAA Studio | Lossless Compression & Algorithm Benchmark</title>
-  <meta name="description" content="High-performance lossless data & image compression studio. Huffman Coding, PackBits RLE, and LZW with SHA-256 cryptographic verification and algorithm benchmarking.">
-  <link rel="icon" href="data:,">
+  <title>DAAC Studio | Lossless Compression Laboratory</title>
+  <meta name="description" content="Professional lossless file compression laboratory with Huffman, PackBits RLE, and LZW algorithms.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style_new.css">
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-  <!-- Ambient Interactive Canvas Effect -->
-  <canvas id="ambient-canvas"></canvas>
-
-  <!-- Top Technical Header -->
-  <header class="app-header">
-    <div class="header-container">
-      <div class="brand-group">
-        <div class="brand-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="4 14 10 14 10 20"></polyline>
-            <polyline points="20 10 14 10 14 4"></polyline>
-            <line x1="14" y1="10" x2="21" y2="3"></line>
-            <line x1="3" y1="21" x2="10" y2="14"></line>
-          </svg>
+  <!-- Hallmark Stamp -->
+  <!-- HALLMARK: style=technical v2.0.0 | critique: precision over decoration | waived: none -->
+  
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-mark">
+            <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">DAAC Studio</span>
+            <span class="brand-tag">Lossless Compression Lab</span>
+          </div>
         </div>
-        <div class="brand-meta">
-          <div class="brand-title">Compress<span class="brand-highlight">DAA</span></div>
-          <div class="brand-sub">Universal Lossless Studio • Lab Edition</div>
-        </div>
-      </div>
-
-      <!-- STRICTLY THREE NAVIGATION TABS -->
-      <nav class="nav-tabs" role="tablist" aria-label="Main Navigation">
-        <button class="nav-tab active" data-tab="compress" id="tab-btn-compress" role="tab" aria-selected="true">
-          <span class="tab-icon">⚡</span>
-          <span class="tab-label">Compress</span>
-        </button>
-        <button class="nav-tab" data-tab="decompress" id="tab-btn-decompress" role="tab" aria-selected="false">
-          <span class="tab-icon">🔓</span>
-          <span class="tab-label">Decompress</span>
-        </button>
-        <button class="nav-tab" data-tab="benchmark" id="tab-btn-benchmark" role="tab" aria-selected="false">
-          <span class="tab-icon">📊</span>
-          <span class="tab-label">Analysis & Benchmark</span>
-        </button>
-      </nav>
-
-      <!-- Utilities & Audio FX Toggle -->
-      <div class="header-actions">
-        <button class="spec-btn" id="btn-show-spec" title="How Compressed Files Work & Container Specification">
-          <span class="spec-icon">ℹ️</span>
-          <span>How It Works</span>
-        </button>
-        <button class="audio-btn active" id="btn-toggle-sound" title="Toggle Mechanical Audio Effects">
-          <span id="audio-icon">🔊</span>
-          <span id="audio-label">FX: ON</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Application Body -->
-  <main class="main-container">
-
-    <!-- =================================================================== -->
-    <!-- SECTION 1: COMPRESSION (TEXT, IMAGES, CODE, BINARY)                 -->
-    <!-- =================================================================== -->
-    <section class="tab-content active" id="tab-compress">
-      
-      <!-- Studio Control Grid -->
-      <div class="studio-grid">
         
-        <!-- Left Panel: Input & Engine Configuration -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">01</span>
-              <div>
-                <h2 class="panel-title">Source Ingestion</h2>
-                <p class="panel-desc">Feed text, code, or image files (PNG, JPG, BMP, WEBP, SVG).</p>
+        <nav class="nav">
+          <button class="nav-item active" data-tab="compress">
+            <i data-lucide="archive" style="width: 16px; height: 16px;"></i>
+            <span>Compress</span>
+          </button>
+          <button class="nav-item" data-tab="decompress">
+            <i data-lucide="package-open" style="width: 16px; height: 16px;"></i>
+            <span>Decompress</span>
+          </button>
+          <button class="nav-item" data-tab="visualizer">
+            <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
+            <span>Visualizer</span>
+          </button>
+          <button class="nav-item" data-tab="benchmark">
+            <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+            <span>Benchmark</span>
+          </button>
+          <button class="nav-item" data-tab="inspector">
+            <i data-lucide="file-search" style="width: 16px; height: 16px;"></i>
+            <span>Inspector</span>
+          </button>
+        </nav>
+        
+        <button class="cmd-btn" id="cmdPaletteBtn">
+          <i data-lucide="command" style="width: 14px; height: 14px;"></i>
+          <span>Command</span>
+          <kbd>⌘K</kbd>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Compress Tab -->
+      <section class="tab-pane active" id="tab-compress">
+        <div class="page-header">
+          <h1 class="page-title">Compression</h1>
+          <p class="page-subtitle">Encode files using Huffman, PackBits RLE, or LZW with cryptographic verification</p>
+        </div>
+        
+        <div class="grid-layout">
+          <!-- Input Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Source</h2>
+              <span class="panel-badge">Input</span>
+            </div>
+            
+            <div class="dropzone" id="compressDropzone">
+              <div class="dropzone-content">
+                <i data-lucide="upload-cloud" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+                <p class="dropzone-text">Drop files here or click to browse</p>
+                <p class="dropzone-hint">Supports any binary file up to 50 MB</p>
+                <input type="file" id="compressFileInput" hidden>
               </div>
             </div>
-            <div class="status-indicator">
-              <span class="status-dot"></span>
-              <span class="status-text" id="compress-engine-status">READY</span>
-            </div>
-          </div>
-
-          <!-- Drag & Drop Zone -->
-          <div class="dropzone" id="compress-dropzone">
-            <div class="dropzone-scan-laser"></div>
-            <div class="dropzone-icon-wrap">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-            </div>
-            <div class="dropzone-main-text">Drag & Drop Any File or Image Here</div>
-            <div class="dropzone-sub-text">Full binary support: PNG, JPG, BMP, WEBP, SVG, TXT, PY, PDF (up to 50 MB)</div>
-            <label class="dropzone-browse-btn" for="compress-file-input">
-              Browse Local Disk
-            </label>
-            <input type="file" id="compress-file-input" style="display: none;">
-          </div>
-
-          <!-- Quick Test Presets (Including Real Images & Datasets) -->
-          <div class="quick-presets">
-            <span class="presets-label">Quick Presets:</span>
-            <div class="presets-chips">
-              <button class="preset-chip chip-img" data-sample="pixel_art.bmp" title="Sample 128x128 24-bit BMP with repeating runs (Tests Image RLE & LZW)">
-                <span class="chip-icon">🎨</span> Pixel Art (BMP)
-              </button>
-              <button class="preset-chip chip-img" data-sample="retro_sprite.bmp" title="Sample 64x64 Retro Sprite Bitmap">
-                <span class="chip-icon">👾</span> Retro Sprite (BMP)
-              </button>
-              <button class="preset-chip chip-img" data-sample="vector_diagram.svg" title="Vector graphic with structured XML tags">
-                <span class="chip-icon">📐</span> Vector SVG
-              </button>
-              <button class="preset-chip" data-sample="natural_text.txt" title="English natural language excerpt">
-                <span class="chip-icon">📖</span> Natural Text
-              </button>
-              <button class="preset-chip" data-sample="repetitive.txt" title="High-redundancy repetitive byte patterns">
-                <span class="chip-icon">🔁</span> Repetitive Runs
-              </button>
-              <button class="preset-chip" data-sample="source_code.py" title="Python source code">
-                <span class="chip-icon">💻</span> Python Code
-              </button>
-            </div>
-          </div>
-
-          <!-- Active File Telemetry & Visual Preview Card -->
-          <div class="file-telemetry-card" id="compress-file-card" style="display: none;">
-            <div class="telemetry-top">
-              <!-- Visual Image / File Preview Box -->
-              <div class="telemetry-preview-box" id="compress-preview-box">
-                <div class="preview-thumb-container" id="compress-thumb-wrap">
-                  <!-- Injected <img> or file icon -->
-                </div>
-              </div>
-              <div class="telemetry-details">
-                <div class="telemetry-title" id="telemetry-name">filename.ext</div>
-                <div class="telemetry-tags">
-                  <span class="tag-badge" id="telemetry-type-badge">TYPE</span>
-                  <span class="tag-badge tag-dim" id="telemetry-size-badge">0 KB</span>
-                  <span class="tag-badge tag-info" id="telemetry-dim-badge" style="display: none;">128 × 128 px</span>
-                </div>
-                <!-- Shannon Entropy Score -->
-                <div class="entropy-meter-wrap" title="Shannon Entropy H = -sum(p * log2(p)). Lower means more compressible redundancy!">
-                  <div class="entropy-label-row">
-                    <span>Shannon Entropy:</span>
-                    <strong id="entropy-value">0.00 / 8.00 b/s</strong>
-                  </div>
-                  <div class="entropy-bar-track">
-                    <div class="entropy-bar-fill" id="entropy-bar-fill" style="width: 50%;"></div>
-                  </div>
-                  <div class="entropy-verdict" id="entropy-verdict">Analyzing stream entropy...</div>
-                </div>
+            
+            <div class="file-info" id="compressFileInfo" style="display: none;">
+              <div class="file-row">
+                <span class="file-name" id="compressFileName"></span>
+                <span class="file-size" id="compressFileSize"></span>
               </div>
             </div>
-            <div class="telemetry-actions">
-              <button class="btn-ghost" id="btn-change-file">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Change File
-              </button>
+            
+            <div class="section">
+              <h3 class="section-title">Compression Algorithm</h3>
+              <div class="segmented" id="algoSegmented">
+                <label class="segmented-item" id="algoItemAuto">
+                  <input type="radio" name="algo" value="auto" checked>
+                  <span class="segmented-label">Auto (Best)</span>
+                  <span class="segmented-desc">Smallest Size</span>
+                </label>
+                <label class="segmented-item" id="algoItemImage" style="display: none;">
+                  <input type="radio" name="algo" value="image_opt">
+                  <span class="segmented-label">Image Opt</span>
+                  <span class="segmented-desc">40–80% Smaller</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="huffman">
+                  <span class="segmented-label">Huffman</span>
+                  <span class="segmented-desc">Min-Heap</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="lzw">
+                  <span class="segmented-label">LZW</span>
+                  <span class="segmented-desc">Dictionary</span>
+                </label>
+                <label class="segmented-item">
+                  <input type="radio" name="algo" value="rle">
+                  <span class="segmented-label">PackBits RLE</span>
+                  <span class="segmented-desc">Run-Length</span>
+                </label>
+              </div>
             </div>
+            
+            <button class="btn btn-primary btn-full" id="compressBtn">
+              <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+              <span>Compress</span>
+            </button>
           </div>
-
-          <!-- Algorithm Selection Engine -->
-          <div class="panel-section-divider"></div>
           
-          <div class="panel-header" style="margin-top: 1rem;">
-            <div class="panel-title-group">
-              <span class="step-num">02</span>
-              <div>
-                <h3 class="panel-title">Compression Algorithm</h3>
-                <p class="panel-desc">Select algorithmic paradigm tailored to your data's entropy.</p>
-              </div>
+          <!-- Results Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Results</h2>
+              <span class="panel-badge">Output</span>
             </div>
-          </div>
-
-          <div class="algo-selection-grid">
-            <!-- Directly Openable Image Optimizer Card (shown when an image is loaded) -->
-            <label class="engine-card" id="engine-card-smart-image" for="algo-image-opt" style="display: none; border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.05);">
-              <input type="radio" name="compression-algo" id="algo-image-opt" value="image_opt" class="engine-radio">
-              <div class="engine-content">
-                <div class="engine-header">
-                  <div class="engine-name" style="color: var(--cyan);">Directly Openable Image Compression</div>
-                  <span class="engine-badge badge-linear">Opens in Apple Preview</span>
-                </div>
-                <div class="engine-desc">Produces a real, viewable compressed image with 50%–80% smaller file size that you can double-click and open directly on your laptop.</div>
-                <div class="engine-math">Output: Standard Openable Image • High Efficiency Compression</div>
-              </div>
-            </label>
-
-            <!-- Image Quality Selector (Visible when smart image is active) -->
-            <div id="image-quality-panel" style="display: none; background: rgba(11, 15, 25, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 0.5rem;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.45rem;">
-                <span>Compression Intensity:</span>
-                <strong id="quality-desc-label" style="color: var(--cyan);">Balanced (~50-70% size reduction)</strong>
-              </div>
-              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                <button type="button" class="preset-chip chip-quality" data-quality="0.5" data-desc="Max Compression (~75-85% size reduction)">⚡ Max Compression</button>
-                <button type="button" class="preset-chip chip-quality active" data-quality="0.75" data-desc="Balanced (~50-70% size reduction)">⚖️ Balanced (Recommended)</button>
-                <button type="button" class="preset-chip chip-quality" data-quality="0.9" data-desc="High Fidelity (~30-50% size reduction)">💎 High Fidelity</button>
-              </div>
-            </div>
-
-            <!-- Huffman Card -->
-            <label class="engine-card selected" for="algo-huffman">
-              <input type="radio" name="compression-algo" id="algo-huffman" value="huffman" checked class="engine-radio">
-              <div class="engine-content">
-                <div class="engine-header">
-                  <div class="engine-name">Huffman Coding</div>
-                  <span class="engine-badge badge-greedy">Greedy Min-Heap</span>
-                </div>
-                <div class="engine-desc">Builds optimal prefix tree combining lowest frequency symbols. Excels on natural text, code, and uncompressed BMP data.</div>
-                <div class="engine-math">Complexity: O(N + K log K) • Prefix-Free Bitstream</div>
-              </div>
-            </label>
-
-            <!-- RLE Card -->
-            <label class="engine-card" for="algo-rle">
-              <input type="radio" name="compression-algo" id="algo-rle" value="rle" class="engine-radio">
-              <div class="engine-content">
-                <div class="engine-header">
-                  <div class="engine-name">Run-Length Encoding (RLE)</div>
-                  <span class="engine-badge badge-linear">PackBits Byte-Scan</span>
-                </div>
-                <div class="engine-desc">Encodes consecutive repeated bytes into count-value tokens. Phenomenal on pixel art, bitmap graphics, and monolithic runs.</div>
-                <div class="engine-math">Complexity: O(N) • Zero Literal Inflation</div>
-              </div>
-            </label>
-
-            <!-- LZW Card -->
-            <label class="engine-card" for="algo-lzw">
-              <input type="radio" name="compression-algo" id="algo-lzw" value="lzw" class="engine-radio">
-              <div class="engine-content">
-                <div class="engine-header">
-                  <div class="engine-name">LZW Compression</div>
-                  <span class="engine-badge badge-dict">Adaptive Dictionary</span>
-                </div>
-                <div class="engine-desc">Builds dynamic phrase dictionary mapping multi-byte motifs to 9–16 bit variable tokens. Outstanding on code, logs, and repeating graphics.</div>
-                <div class="engine-math">Complexity: O(N) • Variable 9-16 Bit Width</div>
-              </div>
-            </label>
-          </div>
-
-          <!-- Compress Action Trigger -->
-          <button class="btn-execute" id="btn-compress-action" disabled>
-            <span class="btn-icon">⚡</span>
-            <span class="btn-text" id="btn-compress-text">Compress File</span>
-          </button>
-        </div>
-
-        <!-- Right Panel: Telemetry & Results Dashboard -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">03</span>
-              <div>
-                <h2 class="panel-title">Compression Telemetry</h2>
-                <p class="panel-desc">Real-time performance metrics, cryptographic SHA-256 digest, and container packing.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Idle Placeholder -->
-          <div class="telemetry-idle-card" id="compress-idle-state">
-            <div class="idle-graphic">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-              </svg>
-            </div>
-            <div class="idle-title">Awaiting Source Ingestion</div>
-            <div class="idle-desc">Select or drop a file or sample above and press <strong>Compress</strong> to inspect live metrics, ratio gauges, and binary container header.</div>
-          </div>
-
-          <!-- Live Results Output -->
-          <div class="results-container" id="compress-results-state" style="display: none;">
             
-            <!-- Metric Gauges Grid -->
-            <div class="metric-tiles-grid">
-              <div class="metric-tile highlight-tile">
-                <div class="tile-caption">Compression Ratio</div>
-                <div class="tile-value highlight-cyan" id="metric-ratio">0.00x</div>
-                <div class="tile-sub">Orig / Comp</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Space Savings</div>
-                <div class="tile-value highlight-green" id="metric-savings">+0.0%</div>
-                <div class="tile-sub">Percent Saved</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Processing Speed</div>
-                <div class="tile-value" id="metric-latency">0.0 ms</div>
-                <div class="tile-sub" id="metric-throughput">0.0 MB/s</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Engine Used</div>
-                <div class="tile-value" id="metric-algo-name" style="font-size: 1.05rem;">Huffman</div>
-                <div class="tile-sub" id="metric-algo-tag">Greedy Min-Heap</div>
-              </div>
+            <div class="empty-state" id="compressEmpty">
+              <i data-lucide="file-archive" style="width: 48px; height: 48px;" class="empty-icon"></i>
+              <p class="empty-text">No compression yet</p>
+              <p class="empty-hint">Select a file and algorithm to begin</p>
             </div>
-
-            <!-- Size Comparison Visual Tracks -->
-            <div class="visual-comparison-box">
-              <div class="track-row">
-                <div class="track-info">
-                  <span class="track-label">Original Uncompressed Payload</span>
-                  <strong class="track-size" id="track-orig-bytes">0 B</strong>
-                </div>
-                <div class="track-bg">
-                  <div class="track-fill track-fill-orig"></div>
-                </div>
-              </div>
-
-              <div class="track-row">
-                <div class="track-info">
-                  <span class="track-label">Compressed Output File</span>
-                  <strong class="track-size" id="track-comp-bytes">0 B</strong>
-                </div>
-                <div class="track-bg">
-                  <div class="track-fill track-fill-comp" id="track-comp-fill" style="width: 40%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Cryptographic Fingerprint Verification Box -->
-            <div class="hash-box">
-              <div class="hash-header">
-                <div class="hash-title">
-                  <span class="hash-shield">🛡️</span>
-                  <span>SHA-256 Pre-Compression Digest (32 Bytes):</span>
-                </div>
-                <button class="hash-copy-btn" id="btn-copy-hash" title="Copy SHA-256 Hash">Copy</button>
-              </div>
-              <div class="hash-hex" id="metric-hash">0000000000000000000000000000000000000000000000000000000000000000</div>
-            </div>
-
-            <!-- Container Binary Header Inspector -->
-            <div class="container-inspector-card">
-              <div class="inspector-header">
-                <span class="inspector-badge">STANDARDIZED CONTAINER HEADER</span>
-                <span class="inspector-len">Fixed 50 Bytes</span>
-              </div>
-              <div class="header-byte-strip" id="container-header-strip">
-                <!-- Dynamically populated binary header blocks -->
-              </div>
-            </div>
-
-            <!-- Download Button -->
-            <button class="btn-download" id="btn-download-daac">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              <span id="btn-download-text">Download Compressed File</span>
-            </button>
-
-            <!-- Instant View / Decompress Button -->
-            <button class="btn-download btn-download-success" id="btn-instant-preview" style="margin-top: 0.65rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-              <span id="btn-instant-preview-text">👁️ Instant View / Decompress Preview</span>
-            </button>
-
-            <!-- Open Tip Explanation Card -->
-            <div class="open-tip-card" id="open-tip-card">
-              <div class="tip-title">💡 How to open this file on your laptop:</div>
-              <div class="tip-text" id="open-tip-text">
-                Compressed images (.jpg/.png) can be double-clicked and opened directly in Apple Preview or Photos! Binary DAA files are packed to save storage; use the <strong>Instant View</strong> button above or drop into the <strong>Decompress</strong> tab to reveal the full original file.
-              </div>
-            </div>
-
-            <!-- Inline Instant Restored Inspection Viewport -->
-            <div class="restored-preview-wrapper" id="compress-inline-preview-wrap" style="display: none; margin-top: 1rem;">
-              <div class="preview-header-bar">
-                <span class="preview-bar-title" id="inline-preview-title">Instant Reconstructed Preview</span>
-                <span class="preview-bar-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--green-bright);">100% Lossless Match</span>
-              </div>
-              <div class="preview-viewport" id="compress-inline-preview-viewport">
-                <!-- Injected: Image canvas or text preview -->
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- SECTION 2: DECOMPRESSION & INTEGRITY VERIFICATION                    -->
-    <!-- =================================================================== -->
-    <section class="tab-content" id="tab-decompress">
-      
-      <div class="studio-grid">
-        
-        <!-- Left Panel: Archive Upload & Header Parse -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">01</span>
-              <div>
-                <h2 class="panel-title">Archive Ingestion</h2>
-                <p class="panel-desc">Upload any compressed file (e.g. compressed_*.png, compressed_*.txt) to decode.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Decompress Dropzone -->
-          <div class="dropzone" id="decompress-dropzone">
-            <div class="dropzone-scan-laser"></div>
-            <div class="dropzone-icon-wrap" style="color: var(--cyan);">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-            </div>
-            <div class="dropzone-main-text">Drop Compressed File Here</div>
-            <div class="dropzone-sub-text">Accepts compressed_*.ext files. Automatically detects algorithm & restores original.</div>
-            <label class="dropzone-browse-btn" for="decompress-file-input">
-              Select Compressed File
-            </label>
-            <input type="file" id="decompress-file-input" style="display: none;">
-          </div>
-
-          <!-- Loaded Archive Badge -->
-          <div class="file-telemetry-card" id="decomp-archive-card" style="display: none; margin-top: 1rem;">
-            <div class="telemetry-top">
-              <div class="telemetry-preview-box" style="font-size: 2rem;">🗜️</div>
-              <div class="telemetry-details">
-                <div class="telemetry-title" id="decomp-archive-name">compressed_file.ext</div>
-                <div class="telemetry-tags">
-                  <span class="tag-badge" id="decomp-archive-size">0 KB</span>
-                  <span class="tag-badge tag-info" id="decomp-detected-algo">Auto-Detecting Algorithm...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Optional Verification File -->
-          <div class="optional-verify-card">
-            <div class="verify-header">
-              <span class="verify-badge">OPTIONAL INTEGRITY AUDIT</span>
-              <span class="verify-desc">Compare against original file byte-for-byte</span>
-            </div>
-            <label class="verify-file-label" for="verify-file-input">
-              <span id="verify-label-text">Select original file to run bit-for-bit comparator</span>
-              <input type="file" id="verify-file-input" style="display: none;">
-            </label>
-          </div>
-
-          <!-- Decompress Action Trigger -->
-          <button class="btn-execute btn-execute-decomp" id="btn-decompress-action" disabled>
-            <span class="btn-icon">🔓</span>
-            <span class="btn-text">Decompress & Verify Lossless Integrity</span>
-          </button>
-        </div>
-
-        <!-- Right Panel: Restored File & Visual Renderer -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">02</span>
-              <div>
-                <h2 class="panel-title">Reconstructed File Preview</h2>
-                <p class="panel-desc">Cryptographic validation check and live rendering of restored data.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Idle State -->
-          <div class="telemetry-idle-card" id="decomp-idle-state">
-            <div class="idle-graphic" style="color: var(--green);">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <div class="idle-title">Awaiting Compressed File</div>
-            <div class="idle-desc">Drop any compressed file (e.g. compressed_*.txt, compressed_*.png) on the left to unpack payload, verify SHA-256 checksum, and render images or text live.</div>
-          </div>
-
-          <!-- Decompress Results -->
-          <div class="results-container" id="decomp-results-state" style="display: none;">
             
-            <!-- Integrity Status Banner -->
-            <div class="integrity-banner verified" id="decomp-integrity-banner">
-              <div class="integrity-icon">🛡️</div>
-              <div class="integrity-text">
-                <div class="integrity-headline" id="decomp-integrity-title">100% LOSSLESS VERIFIED PASS</div>
-                <div class="integrity-sub" id="decomp-integrity-detail">SHA-256 hash matches archive header exactly. Bit-for-bit identical reconstruction.</div>
+            <div id="compressResults" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary);">
+                <span id="statAlgoUsed">Algorithm: Auto</span>
+                <span id="statLosslessPill" style="padding: 2px 8px; border-radius: 4px; background: var(--success-subtle); color: var(--success); font-size: 11px; font-weight: 600;">Smaller Size Guaranteed</span>
+              </div>
+              
+              <div id="imagePreviewWrap" style="display: none; margin-bottom: 16px; text-align: center;">
+                <img id="imagePreview" alt="Compressed Preview" style="max-height: 180px; max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border);" />
+              </div>
+              
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <span class="stat-label">Original</span>
+                  <span class="stat-value" id="statOriginal">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Compressed</span>
+                  <span class="stat-value" id="statCompressed">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Ratio</span>
+                  <span class="stat-value stat-accent" id="statRatio">-</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-label">Savings</span>
+                  <span class="stat-value stat-success" id="statSavings">-</span>
+                </div>
+              </div>
+              
+              <button class="btn btn-secondary btn-full" id="downloadCompressed">
+                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                <span id="downloadBtnText">Download Compressed File</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Decompress Tab -->
+      <section class="tab-pane" id="tab-decompress">
+        <div class="page-header">
+          <h1 class="page-title">Decompression</h1>
+          <p class="page-subtitle">Restore original files with cryptographic integrity verification</p>
+        </div>
+        
+        <div class="grid-layout">
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Compressed File</h2>
+              <span class="panel-badge">Lossless</span>
+            </div>
+            
+            <div class="dropzone" id="decompressDropzone">
+              <div class="dropzone-content">
+                <i data-lucide="file-down" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+                <p class="dropzone-text">Drop compressed file here</p>
+                <p class="dropzone-hint">Algorithm auto-detected from header</p>
+                <input type="file" id="decompressFileInput" hidden>
               </div>
             </div>
-
-            <!-- Stats Grid -->
-            <div class="metric-tiles-grid">
-              <div class="metric-tile">
-                <div class="tile-caption">Decompressed Size</div>
-                <div class="tile-value highlight-cyan" id="decomp-size-val">0 B</div>
-                <div class="tile-sub">Restored Payload</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Decoding Latency</div>
-                <div class="tile-value" id="decomp-latency-val">0.0 ms</div>
-                <div class="tile-sub">Throughput OK</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Container Algorithm</div>
-                <div class="tile-value" id="decomp-algo-val" style="font-size: 1.05rem;">Huffman</div>
-                <div class="tile-sub">From Header Byte 5</div>
-              </div>
-              <div class="metric-tile">
-                <div class="tile-caption">Format Detected</div>
-                <div class="tile-value highlight-green" id="decomp-format-val">PNG Image</div>
-                <div class="tile-sub">MIME Auto-Detect</div>
-              </div>
-            </div>
-
-            <!-- LIVE RESTORED FILE RENDERING (IMAGE PREVIEW OR TEXT PREVIEW) -->
-            <div class="restored-preview-wrapper" id="restored-preview-wrapper">
-              <div class="preview-header-bar">
-                <span class="preview-bar-title" id="preview-bar-title">Restored Visual Inspection</span>
-                <span class="preview-bar-badge" id="preview-bar-badge">Live Render</span>
-              </div>
-              <div class="preview-viewport" id="preview-viewport">
-                <!-- Injected: Image canvas, image element, text preview, or hex inspector -->
-              </div>
-            </div>
-
-            <!-- Download Restored File -->
-            <button class="btn-download btn-download-success" id="btn-download-restored">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              <span id="btn-download-restored-text">Download Restored Original File</span>
+            
+            <button class="btn btn-primary btn-full" id="decompressBtn" disabled>
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              <span>Decompress</span>
             </button>
           </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- SECTION 3: ANALYSIS & BENCHMARK (BENCHMARK SUITE + HUFFMAN TREE)     -->
-    <!-- =================================================================== -->
-    <section class="tab-content" id="tab-benchmark">
-      
-      <!-- Benchmark Suite Header Card -->
-      <div class="panel" style="margin-bottom: 1.5rem;">
-        <div class="benchmark-suite-header">
-          <div>
-            <div class="benchmark-tag">DAA ALGORITHM MATRIX</div>
-            <h2 class="panel-title" style="font-size: 1.5rem; margin-top: 0.25rem;">Multi-Entropy Benchmark Suite</h2>
-            <p class="panel-desc">Evaluate Huffman Coding (Greedy Min-Heap), Run-Length Encoding (PackBits), and LZW across diverse entropy profiles.</p>
-          </div>
-          <button class="btn-benchmark-run" id="btn-run-benchmark-suite">
-            <span class="bench-run-icon">🚀</span>
-            <span id="bench-btn-text">Execute Benchmark Matrix</span>
-          </button>
-        </div>
-
-        <!-- Comparative Chart Container -->
-        <div class="chart-wrapper">
-          <div class="chart-header">
-            <span class="chart-title">Compression Ratio by Dataset (Higher is Better)</span>
-            <div class="chart-legend">
-              <span class="legend-item"><span class="legend-dot dot-huffman"></span> Huffman</span>
-              <span class="legend-item"><span class="legend-dot dot-rle"></span> RLE (PackBits)</span>
-              <span class="legend-item"><span class="legend-dot dot-lzw"></span> LZW</span>
+          
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Verification</h2>
+              <span class="panel-badge">SHA-256</span>
+            </div>
+            
+            <div class="empty-state" id="decompressEmpty">
+              <i data-lucide="shield-check" style="width: 48px; height: 48px;" class="empty-icon"></i>
+              <p class="empty-text">Awaiting archive</p>
+            </div>
+            
+            <div id="decompressResults" style="display: none;">
+              <div class="verify-badge" id="verifyBadge">
+                <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                <span id="verifyText">Verification</span>
+              </div>
+              
+              <button class="btn btn-secondary btn-full" id="downloadRestored">
+                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                <span>Download Restored</span>
+              </button>
             </div>
           </div>
-          <div id="benchmark-chart-canvas" class="chart-canvas-box">
-            <div class="chart-idle-msg">Click <strong>Execute Benchmark Matrix</strong> to generate comparative telemetry bar chart.</div>
-          </div>
         </div>
+      </section>
 
-        <!-- Benchmark Matrix Table -->
-        <div class="table-container">
-          <table class="bench-matrix-table">
-            <thead>
-              <tr>
-                <th>Dataset & Entropy Profile</th>
-                <th>Algorithm</th>
-                <th>Raw Size</th>
-                <th>Compressed</th>
-                <th>Ratio</th>
-                <th>Savings</th>
-                <th>Comp Latency</th>
-                <th>Decomp Latency</th>
-                <th>Integrity</th>
-              </tr>
-            </thead>
-            <tbody id="bench-matrix-body">
-              <tr>
-                <td colspan="9" class="table-empty-cell">Press <strong>Execute Benchmark Matrix</strong> to run live tests across text, code, runs, and bitmap image data.</td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Visualizer Tab -->
+      <section class="tab-pane" id="tab-visualizer">
+        <div class="page-header">
+          <h1 class="page-title">Algorithm Visualizer</h1>
+          <p class="page-subtitle">Step-by-step animation of compression algorithms</p>
         </div>
-      </div>
-
-      <!-- Integrated Deep-Dive Analysis Section: Huffman Tree & Complexity -->
-      <div class="studio-grid" style="margin-top: 1.5rem;">
         
-        <!-- Huffman Interactive Prefix Tree Visualizer -->
         <div class="panel">
           <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">🌳</span>
-              <div>
-                <h3 class="panel-title">Greedy Huffman Prefix Tree Inspector</h3>
-                <p class="panel-desc">Interactive min-heap tree generated for any symbol string.</p>
-              </div>
+            <div class="tabs-inline">
+              <button class="tab-inline active" data-viz="huffman">Huffman</button>
+              <button class="tab-inline" data-viz="rle">RLE</button>
+              <button class="tab-inline" data-viz="lzw">LZW</button>
             </div>
+            <input type="text" class="input" id="vizInput" value="banana" placeholder="Enter text...">
           </div>
-
-          <div class="tree-input-bar">
-            <input type="text" id="tree-text-input" value="ALGORITHM DESIGN AND ANALYSIS" placeholder="Enter custom string...">
-            <button class="btn-tree-generate" id="btn-tree-generate">Render Tree</button>
-          </div>
-
-          <div class="tree-svg-container" id="tree-svg-box">
-            <svg id="huffman-svg-tree" width="100%" height="380"></svg>
-          </div>
-
-          <div class="codeword-table-container">
-            <div class="codeword-header">Generated Prefix Codewords:</div>
-            <div class="codeword-chips" id="tree-codeword-chips">
-              <!-- Codeword items dynamically inserted -->
+          
+          <div class="viz-container" id="vizHuffman">
+            <div class="viz-controls">
+              <button class="btn btn-sm" id="vizPlay"><i data-lucide="play" style="width: 14px; height: 14px;"></i> Play</button>
+              <button class="btn btn-sm" id="vizPause"><i data-lucide="pause" style="width: 14px; height: 14px;"></i> Pause</button>
+              <button class="btn btn-sm" id="vizStep"><i data-lucide="skip-forward" style="width: 14px; height: 14px;"></i> Step</button>
+              <button class="btn btn-sm" id="vizReset"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset</button>
             </div>
+            <svg id="huffmanTree" class="viz-canvas"></svg>
           </div>
         </div>
+      </section>
 
-        <!-- Complexity Matrix & DAA Proofs -->
+      <!-- Benchmark Tab -->
+      <section class="tab-pane" id="tab-benchmark">
+        <div class="page-header">
+          <h1 class="page-title">Benchmark</h1>
+          <p class="page-subtitle">Performance analysis across algorithm and file type combinations</p>
+        </div>
+        
         <div class="panel">
           <div class="panel-header">
-            <div class="panel-title-group">
-              <span class="step-num">📐</span>
-              <div>
-                <h3 class="panel-title">Asymptotic Complexity & Proofs</h3>
-                <p class="panel-desc">Formal analysis of time, space, and optimality conditions.</p>
+            <h2 class="panel-title">Results</h2>
+            <button class="btn btn-sm" id="runBenchmark">
+              <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+              Run Benchmark
+            </button>
+          </div>
+          <canvas id="benchmarkChart"></canvas>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>File Type</th>
+                  <th>Algorithm</th>
+                  <th>Original</th>
+                  <th>Compressed</th>
+                  <th>Ratio</th>
+                  <th>Savings</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inspector Tab -->
+      <section class="tab-pane" id="tab-inspector">
+        <div class="page-header">
+          <h1 class="page-title">Container Inspector</h1>
+          <p class="page-subtitle">Examine file structure byte by byte</p>
+        </div>
+        
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Header Analysis</h2>
+          </div>
+          <div class="dropzone" id="inspectorDropzone">
+            <div class="dropzone-content">
+              <i data-lucide="search" style="width: 40px; height: 40px;" class="dropzone-icon"></i>
+              <p class="dropzone-text">Drop compressed file to inspect</p>
+              <input type="file" id="inspectorFileInput" hidden>
+            </div>
+          </div>
+          <div id="inspectorResults" style="display: none; margin-top: 24px;">
+            <div class="inspector-grid">
+              <div class="inspector-item">
+                <span class="inspector-label">Magic</span>
+                <span class="inspector-value mono" id="inspMagic"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Version</span>
+                <span class="inspector-value" id="inspVersion"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Algorithm</span>
+                <span class="inspector-value" id="inspAlgo"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Original Size</span>
+                <span class="inspector-value" id="inspOriginal"></span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">SHA-256</span>
+                <span class="inspector-value mono small" id="inspSha"></span>
               </div>
             </div>
-          </div>
-
-          <div class="theory-card">
-            <h4 class="theory-title">1. Why Huffman is Optimal: Greedy Choice Property</h4>
-            <p class="theory-body">Let $x$ and $y$ be the two characters with lowest frequencies in alphabet $C$. There exists an optimal prefix code for $C$ in which $x$ and $y$ are sibling leaves at maximum depth.</p>
-            <div class="math-callout">
-              B(T) = &sum; [f(c) &times; d<sub>T</sub>(c)] &mdash; Cost function minimized via Min-Heap merge.
-            </div>
-            <p class="theory-body"><em>Proof via Exchange:</em> Swapping higher-frequency nodes with $x, y$ at deepest positions reduces total weighted path length, guaranteeing greedy optimality.</p>
-          </div>
-
-          <div class="theory-card" style="margin-top: 1rem;">
-            <h4 class="theory-title">2. Asymptotic Comparison Matrix</h4>
-            <div class="table-container" style="margin-top: 0.5rem;">
-              <table class="bench-matrix-table" style="font-size: 0.82rem;">
-                <thead>
-                  <tr>
-                    <th>Algorithm</th>
-                    <th>Paradigm</th>
-                    <th>Time</th>
-                    <th>Aux Space</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Huffman</strong></td>
-                    <td>Greedy Min-Heap</td>
-                    <td>O(N + K log K)</td>
-                    <td>O(K) tree</td>
-                  </tr>
-                  <tr>
-                    <td><strong>PackBits RLE</strong></td>
-                    <td>Linear Scan</td>
-                    <td>O(N)</td>
-                    <td>O(1)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>LZW</strong></td>
-                    <td>Adaptive Dict</td>
-                    <td>O(N)</td>
-                    <td>O(2<sup>16</sup>)</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="byte-map">
+              <h3 class="section-title">Header Byte Map (50 bytes)</h3>
+              <div class="byte-grid" id="byteGrid"></div>
             </div>
           </div>
         </div>
+      </section>
+    </main>
+  </div>
 
+  <!-- Command Palette -->
+  <div class="cmd-palette" id="cmdPalette">
+    <div class="cmd-backdrop" id="cmdBackdrop"></div>
+    <div class="cmd-modal">
+      <div class="cmd-input-wrap">
+        <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command...">
       </div>
-
-    </section>
-
-  </main>
-
-  <!-- ===================================================================== -->
-  <!-- MODAL: WHAT IS .DAAC? (CONTAINER FORMAT SPECIFICATION)                 -->
-  <!-- ===================================================================== -->
-  <div class="spec-modal-backdrop" id="spec-modal" style="display: none;">
-    <div class="spec-modal-window">
-      <div class="spec-modal-header">
-        <div class="spec-modal-title">
-          <span style="font-size: 1.4rem;">📦</span>
-          <div>
-            <h3>How Compression Works & Container Specification</h3>
-            <p>Design and Analysis of Algorithms Compressor Container Specification</p>
-          </div>
+      <div class="cmd-list" id="cmdList">
+        <div class="cmd-item" data-cmd="compress">
+          <i data-lucide="archive" style="width: 16px; height: 16px;"></i>
+          <span>Go to Compress</span>
         </div>
-        <button class="modal-close-btn" id="btn-close-modal">&times;</button>
-      </div>
-
-      <div class="spec-modal-body">
-        <div class="spec-intro-block">
-          <p>When you compress a file or image, it keeps its original file extension with a <strong>compressed_</strong> prefix (e.g. <code>compressed_photo.png</code> or <code>compressed_notes.txt</code>). For lossless algorithmic bitstreams, it embeds a <strong>standardized binary header</strong> so decoders know which algorithm was used and how to reconstruct the exact original file.</p>
+        <div class="cmd-item" data-cmd="decompress">
+          <i data-lucide="package-open" style="width: 16px; height: 16px;"></i>
+          <span>Go to Decompress</span>
         </div>
-
-        <h4 style="margin: 1.25rem 0 0.5rem; font-size: 0.95rem; color: #E2E8F0;">Standard 50-Byte Fixed Binary Header:</h4>
-
-        <div class="spec-table-wrap">
-          <table class="spec-table">
-            <thead>
-              <tr>
-                <th>Offset (Bytes)</th>
-                <th>Field Name</th>
-                <th>Type</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>00 - 03</code></td>
-                <td><strong>Magic Identifier</strong></td>
-                <td>4-byte ASCII (<code>DAAC</code>)</td>
-                <td>Guarantees file identity (0x44 0x41 0x41 0x43). Rejects foreign files.</td>
-              </tr>
-              <tr>
-                <td><code>04</code></td>
-                <td><strong>Format Version</strong></td>
-                <td>uint8 (<code>0x01</code>)</td>
-                <td>Container protocol version for backward compatibility.</td>
-              </tr>
-              <tr>
-                <td><code>05</code></td>
-                <td><strong>Algorithm ID</strong></td>
-                <td>uint8 (1, 2, or 3)</td>
-                <td>1 = Huffman Coding, 2 = PackBits RLE, 3 = LZW Compression.</td>
-              </tr>
-              <tr>
-                <td><code>06 - 13</code></td>
-                <td><strong>Original Size</strong></td>
-                <td>uint64 Big-Endian</td>
-                <td>Expected uncompressed byte count for exact buffer sizing.</td>
-              </tr>
-              <tr>
-                <td><code>14 - 45</code></td>
-                <td><strong>SHA-256 Digest</strong></td>
-                <td>32-byte Binary Hash</td>
-                <td>Cryptographic fingerprint of original data for 100% lossless verification.</td>
-              </tr>
-              <tr>
-                <td><code>46 - 49</code></td>
-                <td><strong>Metadata Length</strong></td>
-                <td>uint32 Big-Endian</td>
-                <td>Byte length of auxiliary payload (e.g., Huffman frequency table).</td>
-              </tr>
-              <tr>
-                <td><code>50 ... End</code></td>
-                <td><strong>Payload Stream</strong></td>
-                <td>Variable Bitstream</td>
-                <td>The compressed algorithmic payload bitstream.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="cmd-item" data-cmd="visualizer">
+          <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
+          <span>Go to Visualizer</span>
         </div>
-
-        <div class="spec-footer-tip">
-          <strong>💡 Lossless Integrity Guarantee:</strong> Because every <code>.daac</code> archive embeds the original file's SHA-256 cryptographic digest, the decompressor automatically validates that the restored file is 100% bit-for-bit identical before rendering it.
+        <div class="cmd-item" data-cmd="benchmark">
+          <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+          <span>Go to Benchmark</span>
+        </div>
+        <div class="cmd-item" data-cmd="inspector">
+          <i data-lucide="file-search" style="width: 16px; height: 16px;"></i>
+          <span>Go to Inspector</span>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app_new.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

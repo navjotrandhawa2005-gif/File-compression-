@@ -4,18 +4,17 @@ Exposes Python compressors through REST API
 """
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from typing import Optional
 import tempfile
 import os
-import json
 from pathlib import Path
+import hashlib
 
 from algorithms.huffman import HuffmanCompressor
 from algorithms.rle import RLECompressor
 from algorithms.lzw import LZWCompressor
-from utils.file_io import ContainerFile, ALGO_HUFFMAN, ALGO_RLE, ALGO_LZW
-from benchmark import BenchmarkSuite
+from utils.file_io import ContainerFile, ALGO_HUFFMAN, ALGO_RLE, ALGO_LZW, compute_sha256
 
 app = FastAPI(
     title="DAA Compression API",
@@ -23,7 +22,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -46,39 +44,65 @@ algo_map = {
 
 @app.get("/")
 def root():
-    return {"message": "DAA Compression API", "algorithms": ["huffman", "rle", "lzw"]}
+    return {"message": "DAA Compression API", "algorithms": ["auto", "huffman", "lzw", "rle"]}
 
 @app.post("/compress")
 async def compress_file(
     file: UploadFile = File(...),
-    algorithm: str = Form(...)
+    algorithm: str = Form("auto")
 ):
-    if algorithm not in compressors:
-        raise HTTPException(status_code=400, detail="Invalid algorithm. Use huffman, rle, or lzw")
+    valid_algos = ["auto", "huffman", "lzw", "rle"]
+    if algorithm not in valid_algos:
+        raise HTTPException(status_code=400, detail="Invalid algorithm. Choose auto, huffman, lzw, or rle.")
     
     try:
-        # Read file
         contents = await file.read()
         data = bytes(contents)
+        sha = compute_sha256(data)
         
-        # Compress
-        compressor = compressors[algorithm]
-        metadata, compressed_payload = compressor.compress(data)
+        if algorithm == "auto":
+            candidates = []
+            for a_key in ["lzw", "huffman", "rle"]:
+                try:
+                    c = compressors[a_key]
+                    m, p = c.compress(data)
+                    pk = ContainerFile.pack(algo_map[a_key], len(data), sha, m, p)
+                    candidates.append((len(pk), a_key, pk))
+                except Exception:
+                    pass
+            if candidates:
+                candidates.sort(key=lambda x: x[0])
+                best_size, chosen_algo, packed = candidates[0]
+            else:
+                chosen_algo = "huffman"
+                m, p = compressors["huffman"].compress(data)
+                packed = ContainerFile.pack(algo_map["huffman"], len(data), sha, m, p)
+        else:
+            chosen_algo = algorithm
+            compressor = compressors[algorithm]
+            metadata, compressed_payload = compressor.compress(data)
+            packed = ContainerFile.pack(algo_map[algorithm], len(data), sha, metadata, compressed_payload)
         
-        # Create container
-        container = ContainerFile(algorithm=algo_map[algorithm])
-        container.build(compressed_payload, metadata, original_size=len(data))
-        packed = container.pack()
+        orig_name = file.filename or "file.bin"
+        ext = Path(orig_name).suffix
+        comp_name = orig_name if orig_name.startswith("compressed_") else f"compressed_{orig_name}"
         
-        # Save to temp file
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.daac') as tmp:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext or '.bin') as tmp:
             tmp.write(packed)
             tmp_path = tmp.name
+        
+        headers = {
+            "X-Chosen-Algorithm": chosen_algo,
+            "X-Original-Size": str(len(data)),
+            "X-Compressed-Size": str(len(packed)),
+            "Access-Control-Expose-Headers": "X-Chosen-Algorithm, X-Original-Size, X-Compressed-Size, Content-Disposition"
+        }
         
         return FileResponse(
             tmp_path,
             media_type='application/octet-stream',
-            filename=f"{Path(file.filename).stem}.daac"
+            filename=comp_name,
+            headers=headers
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -89,35 +113,34 @@ async def decompress_file(file: UploadFile = File(...)):
         contents = await file.read()
         data = bytes(contents)
         
-        # Parse container
-        container = ContainerFile()
-        container.unpack(data)
-        
-        # Get algorithm
-        algo_id = container.header.algorithm_id
-        if algo_id == ALGO_HUFFMAN:
-            comp = compressors['huffman']
-        elif algo_id == ALGO_RLE:
-            comp = compressors['rle']
-        elif algo_id == ALGO_LZW:
-            comp = compressors['lzw']
-        else:
-            raise HTTPException(status_code=400, detail="Unknown algorithm")
-        
-        # Decompress
-        result = comp.decompress(container.metadata, container.payload, container.header.original_size)
-        
-        # Verify checksum if present
-        verification = {"verified": False, "message": "No checksum"}
-        if len(container.header.sha256) == 32:
-            import hashlib
-            calc_hash = hashlib.sha256(result).digest()
-            if calc_hash == bytes(container.header.sha256):
-                verification = {"verified": True, "message": "SHA-256 verification passed"}
+        if len(data) >= 4 and data[:4] == b"DAAC":
+            header, metadata, compressed_payload = ContainerFile.unpack(data)
+            algo_id = header.algorithm_id
+            if algo_id == ALGO_HUFFMAN:
+                comp = compressors['huffman']
+            elif algo_id == ALGO_RLE:
+                comp = compressors['rle']
+            elif algo_id == ALGO_LZW:
+                comp = compressors['lzw']
             else:
-                verification = {"verified": False, "message": "SHA-256 verification failed"}
+                raise HTTPException(status_code=400, detail="Unknown algorithm")
+            
+            result = comp.decompress(metadata, compressed_payload, header.original_size)
+        else:
+            # Direct binary (e.g. directly compressed image)
+            result = data
         
-        # Save result
+        # Restore original extension and filename without 'compressed_'
+        orig_name = file.filename or "file.bin"
+        if orig_name.startswith("compressed_"):
+            restored_name = orig_name[len("compressed_"):]
+        elif orig_name.endswith(".daac"):
+            restored_name = orig_name[:-5]
+        elif orig_name.startswith("restored_"):
+            restored_name = orig_name
+        else:
+            restored_name = f"restored_{orig_name}"
+
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
             tmp.write(result)
             tmp_path = tmp.name
@@ -125,7 +148,7 @@ async def decompress_file(file: UploadFile = File(...)):
         return FileResponse(
             tmp_path,
             media_type='application/octet-stream',
-            filename=f"restored_{Path(file.filename).stem}"
+            filename=restored_name
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -136,26 +159,20 @@ async def inspect_file(file: UploadFile = File(...)):
         contents = await file.read()
         data = bytes(contents)
         
-        container = ContainerFile()
-        container.unpack(data)
+        header, metadata, compressed_payload = ContainerFile.unpack(data)
         
         algo_names = {1: "Huffman Coding", 2: "Run-Length Encoding (PackBits)", 3: "LZW Compression"}
         
-        import hashlib
-        header_bytes = data[:50]
-        meta_bytes = data[50:50 + container.header.metadata_length] if container.header.metadata_length > 0 else b""
-        
         return {
-            "magic": container.header.magic.hex(),
-            "version": container.header.version,
-            "algorithm_id": container.header.algorithm_id,
-            "algorithm_name": algo_names.get(container.header.algorithm_id, "Unknown"),
-            "original_size": container.header.original_size,
-            "metadata_length": container.header.metadata_length,
-            "sha256": bytes(container.header.sha256).hex(),
-            "header_hex": header_bytes.hex(),
-            "metadata_hex": meta_bytes.hex() if meta_bytes else "",
-            "payload_size": len(container.payload),
+            "magic": "DAAC",
+            "version": header.version,
+            "algorithm_id": header.algorithm_id,
+            "algorithm_name": algo_names.get(header.algorithm_id, "Unknown"),
+            "original_size": header.original_size,
+            "metadata_length": len(metadata),
+            "sha256": header.sha256_hash.hex(),
+            "header_hex": data[:50].hex(),
+            "payload_size": len(compressed_payload),
             "total_size": len(data)
         }
     except Exception as e:
@@ -164,6 +181,7 @@ async def inspect_file(file: UploadFile = File(...)):
 @app.get("/benchmark")
 async def run_benchmark():
     try:
+        from benchmark import BenchmarkSuite
         suite = BenchmarkSuite()
         results = suite.run_full_benchmark()
         summary = suite.generate_summary()

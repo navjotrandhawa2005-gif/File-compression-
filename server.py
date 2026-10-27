@@ -52,8 +52,11 @@ def launch_web_server(port: int = PORT, open_browser: bool = True):
             httpd.serve_forever()
     except OSError as e:
         if "Address already in use" in str(e):
-            print(f"\n[Notice] Port {port} is currently in use. Trying port {port + 1}...")
-            launch_web_server(port=port + 1, open_browser=open_browser)
+            next_port = port + 1
+            if next_port == 8001:  # Port 8001 is reserved for the FastAPI compression backend
+                next_port = 8002
+            print(f"\n[Notice] Port {port} is currently in use. Trying port {next_port}...")
+            launch_web_server(port=next_port, open_browser=open_browser)
         else:
             raise e
     except KeyboardInterrupt:

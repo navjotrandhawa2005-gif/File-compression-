@@ -205,16 +205,16 @@ class CompressionAppGUI:
                   style="SubHeader.TLabel").pack(anchor="w", pady=(0, 14))
 
         # Archive Selection
-        arch_frame = ttk.LabelFrame(tab, text=" 1. Compressed Archive (.daac) ", padding=10)
+        arch_frame = ttk.LabelFrame(tab, text=" 1. Compressed File ", padding=10)
         arch_frame.pack(fill=tk.X, pady=6)
 
         self.decomp_input_var = tk.StringVar()
         entry = ttk.Entry(arch_frame, textvariable=self.decomp_input_var)
         entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 8))
-        ttk.Button(arch_frame, text="Browse Archive...", command=self._browse_decomp_file).pack(side=tk.RIGHT)
+        ttk.Button(arch_frame, text="Browse File...", command=self._browse_decomp_file).pack(side=tk.RIGHT)
 
         # Header Info Display
-        self.header_info_var = tk.StringVar(value="Select an archive to inspect header metadata...")
+        self.header_info_var = tk.StringVar(value="Select a compressed file to inspect header metadata...")
         ttk.Label(tab, textvariable=self.header_info_var, font=("Helvetica", 9, "italic"),
                   foreground="#0284C7").pack(anchor="w", padx=6, pady=4)
 
@@ -245,7 +245,7 @@ class CompressionAppGUI:
     def _browse_decomp_file(self):
         f = filedialog.askopenfilename(
             title="Select compressed file",
-            filetypes=[("Compressed File", "*.*"), ("DAA Archive", "*.daac"), ("All Files", "*.*")]
+            filetypes=[("Compressed File", "*.*"), ("All Files", "*.*")]
         )
         if f:
             self.decomp_input_var.set(f)

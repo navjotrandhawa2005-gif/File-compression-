@@ -112,7 +112,7 @@ def interactive_compress():
 
 def interactive_decompress():
     print("\n--- DECOMPRESS A FILE ---")
-    archive_path = input("Enter path to compressed archive (.daac): ").strip().strip("\"'")
+    archive_path = input("Enter path to compressed file: ").strip().strip("\"'")
     if not os.path.isfile(archive_path):
         print(f"Error: File '{archive_path}' does not exist.")
         return
@@ -160,7 +160,7 @@ def interactive_menu():
         print_banner()
         print("MAIN MENU:")
         print("  1. Compress a file")
-        print("  2. Decompress a file (.daac archive)")
+        print("  2. Decompress a file")
         print("  3. Run comprehensive benchmark & generate comparison graphs")
         print("  4. Verify two files are identical (lossless checker)")
         print("  5. Launch Modern Web Browser Studio (Recommended)")
@@ -202,7 +202,7 @@ def run_cli_arguments():
     # Compress subcommand
     comp_parser = subparsers.add_parser("compress", help="Compress a file")
     comp_parser.add_argument("-i", "--input", required=True, help="Path to input file to compress")
-    comp_parser.add_argument("-o", "--output", help="Path to output compressed archive (.daac)")
+    comp_parser.add_argument("-o", "--output", help="Path to output compressed file")
     comp_parser.add_argument(
         "-a", "--algorithm", choices=["huffman", "rle", "lzw"], default="huffman",
         help="Compression algorithm to use (default: huffman)"
@@ -210,7 +210,7 @@ def run_cli_arguments():
 
     # Decompress subcommand
     decomp_parser = subparsers.add_parser("decompress", help="Decompress an archive file")
-    decomp_parser.add_argument("-i", "--input", required=True, help="Path to compressed archive (.daac)")
+    decomp_parser.add_argument("-i", "--input", required=True, help="Path to compressed file")
     decomp_parser.add_argument("-o", "--output", required=True, help="Path for restored output file")
     decomp_parser.add_argument("-v", "--verify", help="Path to original file to verify byte-for-byte equality")
 
